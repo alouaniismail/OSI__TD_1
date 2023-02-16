@@ -1,0 +1,25 @@
+3->Mesure des changements de contexte:
+
+On a vu:
+1->Observation des processus et des processeurs.
+2->Répartition des processus et du temps processeur.
+
+QST1.(durée d'un appel sleep OK.)
+QST2.
+
+>gettimeofday lui-même puis getpid():
+-------------------------------------
+
+Rappel: appel système virtuel:
+>Un appel système virtuel (en anglais, Virtual System Call ou VSYSCALL) est une technique utilisée par certains systèmes d'exploitation pour améliorer les performances des appels système couramment utilisés. Cette technique consiste à fournir des routines de traitement des appels système directement dans l'espace utilisateur, afin d'éviter le coût de commutation entre l'espace utilisateur et l'espace noyau.
+
+>>Plus précisément, un VSYSCALL est un appel système qui est implémenté en tant que routine située à une adresse fixe dans l'espace utilisateur, souvent mappée directement dans la mémoire du noyau. Cette adresse est généralement connue du compilateur et peut donc être utilisée pour appeler la routine directement depuis le code utilisateur, sans avoir besoin d'effectuer une transition vers le noyau.
+
+>>>Les VSYSCALL sont souvent utilisés pour des opérations courantes qui ne nécessitent pas une grande quantité de traitement noyau, telles que la récupération de l'heure système ou l'obtention de l'adresse de la mémoire partagée. En utilisant des VSYSCALL pour ces opérations, les performances des appels système peuvent être améliorées, car la surcharge de commutation de contexte peut être évitée.
+
+>>>>Il est important de noter que l'utilisation des VSYSCALL peut varier selon les systèmes d'exploitation et les architectures matérielles, et que leur utilisation peut être limitée ou désactivée dans certains environnements de sécurité.
+
+=====================================================================
+
+
+

@@ -1,0 +1,160 @@
+TD1: Ordonnancemment des processus
+----------------------------------
+
+1-Observation des processus et processeurs:
+
+Premières définitions:
+
+7>>>Un "processus" est un programme en cours d'exécution sur un ordinateur. C'est une instance d'une application ou d'un programme qui est en train de s'exécuter sur le système d'exploitation.
+
+>>>Un "processeur", également appelé "unité centrale de traitement" (UCT) en français, est la partie centrale de l'ordinateur qui exécute les instructions de l'ordinateur. Le processeur est responsable de toutes les tâches de traitement des données sur un ordinateur, telles que le traitement des instructions, les calculs et les opérations de mémoire.
+
+En résumé, un processus est un programme en cours d'exécution, tandis qu'un processeur est la partie centrale de l'ordinateur qui traite les données.
+
+BUT: 
+	Quelques bases sur /proc et l'utilisation de la commande top:
+
+QST1.(1.a))
+a->cat /proc/cpuinfo affiche 8 processeurs de 0 à 7. (processor à chaque paragraphe)
+b->Le répertoire /proc dans un OSI: Linux est un pseudo-répertoire qui contient des fichiers d'information sur les processus en cours d'exécution sur le système. Les fichiers dans ce répertoire sont en réalité des entrées virtuelles qui sont générées en temps réel par le noyau et ne sont pas stockées sur le disque dur. Les types de fichiers que vous pouvez trouver dans le répertoire /proc incluent:
+
+1./proc/[pid] : pour chaque processus en cours d'exécution, un répertoire est créé sous /proc avec le numéro de processus (pid) de ce processus. Ce répertoire contient des informations détaillées sur le processus, telles que ses limites de ressources, ses fichiers ouverts et son état actuel. 
+
+2./proc/cpuinfo: infos détaillées sur les processeurs du système, telles que leur vitesse, leur nombre de coeurs et leur architecture.
+
+3./proc/meminfo:  infos sur l'utilisation de la mémoire sur le système, telles que la qté totale de mémoire physique et la qté de mémoire utilisée. 
+
+4./proc/mounts: donne des info sur les systèmes de fichiers montés sur le système telles que le type de système de fichiers, le point de montage, la taille, etc...
+
+A RETENIR:
+ /proc est un dossier virtuel sur les systèmes d'exploitation basés sur Unix, comme Linux. Il ne contient pas de fichiers réels, mais plutôt des informations sur les processus en cours d'exécution et les paramètres du système. Les fichiers dans /proc offrent une vue en temps réel sur le système en cours d'exécution.
+ 
+ c->/proc/[pid]/state est un fichier associé à chaque processus en cours d'exécution sur le système. Il donne des informations sur l'état actuel du processus, telles que :
+
+    State : un caractère qui indique l'état actuel du processus, comme "R" pour en cours d'exécution ou "S" pour endormi.
+
+    Tgid : le PID du groupe de processus auquel appartient le processus.
+
+    PPid : le PID du processus parent qui a créé ce processus.
+
+    Nlwp : le nombre de threads légers associés à ce processus.
+ A retenir: Tgid/Ppid/Nlwp.
+ 
+ /proc/self est un lien symbolique spécial qui pointe sur le dossier /proc associé au processus en cours d'exécution qui accède à ce lien. Il est utilisé pour obtenir des informations sur le processus en cours d'exécution sans avoir à connaître son PID. Par exemple, un processus peut utiliser "cat /proc/self/status" pour obtenir des informations sur son propre état.
+ 
+ En resume:
+ 
+ /proc/cpuinfo -> processeurs.
+ /proc -> dossier virtuel sur les systèmes d'exploitation basés sur Unix, comme Linux. Il ne contient pas de fichiers réels, mais plutôt des informations sur les processus en cours d'exécution et les paramètres du système. Les fichiers dans /proc offrent une vue en temps réel sur le système en cours d'exécution.
+ /proc/<pid>/status: fichier associé à chaque processus en cours d'exécution sur le système. Il donne des informations sur l'état actuel du processus, telles que : State(R,S)/Tgid/Ppid/Nlwp.
+ /proc/self: lien symbolique spécial qui pointe sur le dossier /proc associé au processus en cours d'exécution qui accède à ce lien. Il est utilisé pour obtenir des informations sur le processus en cours d'exécution sans avoir à connaître son PID. Par exemple, un processus peut utiliser "cat /proc/self/status" pour obtenir des informations sur son propre état.
+ 
+ 
+ En resume bref:
+ 1-/proc: dossier virtuel en temps réèl les processus en cours d'exécution.
+ 2-/proc/cpuinfo: processeurs et paramètres.
+ 3-/proc/<pid>/stat: State(R,S) ; Tgid ; Ppid ; Nlwp.
+ 4-/proc/self: lien symbolique pointant sur /proc associé au processus en cours d'exécution qui accède à ce lien.
+ 
+ QST2.(1.b))
+ Commande top:
+ >>>
+ 	top est un outil de surveillance du système sur les systèmes d'exploitation basés sur Unix, comme Linux. Il affiche une liste des processus en cours d'exécution sur le système, ainsi que des informations sur leur utilisation de la CPU, de la mémoire, du temps d'exécution, etc.
+ 	
+Voici une brève explication des colonnes affichées dans top :
+
+    1/PID (Process ID) : c'est le numéro unique attribué à chaque processus en cours d'exécution sur le système.
+
+    2/USER : c'est le nom de l'utilisateur propriétaire du processus.
+
+    3/PR : c'est le niveau de priorité associé au processus. Plus le nombre est élevé, plus la priorité est faible.
+
+    4/NI : c'est un niveau de priorité associé au processus qui peut être ajusté par un administrateur système.
+
+    5/VIRT : c'est la taille de la mémoire virtuelle utilisée par le processus, en kilo-octets.
+
+    6/RES : c'est la taille de la mémoire physique réellement utilisée par le processus, en kilo-octets.
+
+    7/SHR : c'est la taille de la mémoire partagée utilisée par le processus, en kilo-octets.
+
+    8/S : c'est l'état du processus, comme "R" pour en cours d'exécution ou "S" pour endormi.
+
+    9/%CPU : c'est la proportion de temps CPU consacrée au processus au cours des dernières secondes.
+
+    10/%MEM : c'est la proportion de la mémoire physique utilisée par le processus par rapport à la mémoire totale du système.
+ 
+ >>>
+ 
+ Les lignes du haut de l'affichage de top donnent une vue d'ensemble de l'utilisation des ressources du système, telles que :
+
+    1/Load average : c'est la charge moyenne du système au cours des dernières minutes.
+
+    2/Tasks : c'est le nombre total de processus en cours d'exécution sur le système.
+
+    3/CPU(s) : c'est la consommation de la CPU, affichée sous forme de pourcentage de temps CPU utilisé.
+
+    5/Mem : c'est l'utilisation de la mémoire, affichée sous forme de proportion de la mémoire totale du système.
+
+    6/Swap : c'est l'utilisation de l'espace de swap, affichée sous forme de proportion de l'espace de swap total du système.(L'espace de swap est une partie de votre disque dur qui est utilisée comme mémoire vive (RAM) supplémentaire pour votre système. Lorsque la mémoire physique de votre système devient pleine, les pages de mémoire peu utilisées sont déplacées vers l'espace de swap pour libérer de la mémoire physique pour d'autres processus. Cela s'appelle "paging out".)
+
+    7/PID : c'est le nombre total de processus en cours d'exécution sur le système.
+
+QST3.(1.c))
+
+a->top puis u: ubuntu20 pour filtrer les utilisateurs puis f(avec des espaces selectionner ; deselectionner) pour sélectionner une colonne de tri puis s/Echap pour sortir.(nouveau affichage).
+b->On appuie sur 1(pas l) pour afficher l'utilisation des différents processus. 
+c->On appuie sur f puis espace jusqu'à la ligne P puis f puis j puis Entrée classiquement ou Echap tout simple->ajoute la colonne P du processeur utilisé.(variation(désordonnancement))
+d->ATTENTION:
+>>>
+	Les processus s'exécutent sur des processeurs en fonction de la stratégie de planification du noyau du système d'exploitation. La plupart des systèmes d'exploitation modernes utilisent une stratégie de planification dynamique qui permet aux processus de s'exécuter sur n'importe quel processeur disponible.
+
+La stratégie de planification détermine la manière dont les processeurs sont attribués aux processus. Par exemple, la planification prioritaire assigne les processeurs aux processus en fonction de leur priorité. La planification round-robin assigne les processeurs aux processus en utilisant un algorithme de rotation pour équitablement distribuer les ressources.
+
+	L'objectif principal de la stratégie de planification est d'assurer une utilisation efficace des ressources de processeur pour améliorer les performances du système. Elle peut prendre en compte des facteurs tels que la priorité du processus, la quantité de mémoire utilisée, la quantité de temps restant pour l'exécution du processus et d'autres facteurs pour déterminer sur quel processeur un processus doit s'exécuter.
+
+En fin de compte, les processeurs sur lesquels les processus actuels s'exécutent dépendent de la stratégie de planification utilisée et de la charge actuelle du système. Il est important de noter que les processus peuvent être déplacés entre les processeurs pendant leur exécution pour optimiser les performances globales du système.(qté de désordonnancement)
+ 
+Le premier avec le moins de mémoire et la moindre prioritée + varie après immédiat.
+
+QST4.(1.d))
+
+On change la granularitée temporelle du rafraîchissement de l'affichage en appuyant sur s et entrant un nombre flottant de secondes 10 ms par exemple. (<=>variation rapide)
+On diminue bcp=>ça varie plus(c'est rapide)=>détection rapide=>fatiguer l'ordinateur. (changement de la fréquence de la mise à jour de l'affichage : principe.)
+
+Rq:(importante)
+Cependant, si vous diminuez considérablement la granularité temporelle, il se peut que le système ne soit plus en mesure de suivre la fréquence de mise à jour et que l'affichage soit ralenti ou même bloqué. Cela peut être dû à la surcharge de la charge de travail sur le système, ce qui signifie que le processeur n'a plus suffisamment de ressources pour suivre la fréquence de mise à jour élevée.
+
+Il est donc important de trouver un équilibre entre la fréquence de mise à jour souhaitée et les capacités du système pour éviter un surmenage inutile du processeur. Il est également important de noter que la modification de la granularité temporelle peut affecter les autres processus en cours d'exécution sur le système, ce qui peut entraîner une baisse des performances globales du système.
+
+==========================================================================================
+
+Résumé global:
+1.a)
+/proc/cpuinfo: le nbr de processus
+/proc: dossier virtuel contenant les infos du système et les processus en cours d'exécution en temps réèl.
+/proc/<pid>/stat: Tgid,Ppid,Nlwp,State(R,S).
+/proc/self: lien symbolique sur /proc par rapport au programme l'exécutant en cours.(cat par exemple pour cat /proc/self/status.
+1.b)
+u: ubuntu20
+top
+f, s puis Echap pour sélectionner/déselectionner.
+f, puis P/Espace pour ajouter une colonne montrant le processeur qui éceute le pid concerné.  (f,j puis Entrée)
+1.c)
+Load average
+Tasks
+Cpu
+Mem
+Swap
+Pid sur les lignes
+sur les colonnes(après l'exécution de top):
+PID
+USER
+NI PR
+VIRT RES
+SHR S
+%MEM %CPU
+1.d)
+s granularitée temporelle puis entrée=>fréquence=>diminution de performance si diminution de la fréquence de mise à jour. Voilà.
+Fin_EXO1.//
+
+===============================================================================================

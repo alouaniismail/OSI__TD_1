@@ -1,0 +1,110 @@
+EXO2: Répartition des processus et du temps processeur:
+
+QST1.(2.a))
+Vous pouvez écrire un programme qui fait une attente active infinite en utilisant une boucle infinie dans lequel un compteur est incrémenté à chaque itération.
+
+./a.out & en fond de tâche puis top affiche en premier le a.out comme processus en cours non fini. Bien sûr. (attente active infinie)
+
+./a.out & puis top fait varier le processus sur lequel s'exécute ce dernier. (2 puis 6 en faisant la fréquence à 0.5)
+Rq: on fait s(fréq.)/ f puis P espace en-dessous puis q(quit).
+
+Si on lance 3 ./a.out & ./a.out & ./a.out & cela fait varier les processeurs sur lesquels s'exécutent ces 4 processus en cours. (les 4 './a.out').
+
+Remarques importantes:
+->
+
+Lorsque vous lancez ce programme, vous verrez que le pourcentage d'utilisation du processeur pour ce processus est très élevé dans la commande "top". Cela est dû au fait que le processus effectue une attente active infinie, ce qui signifie qu'il utilise constamment le processeur pour effectuer des calculs inutiles.
+
+Si vous lancez plusieurs instances de ce programme en même temps, elles se répartiront sur les différents processeurs en fonction de la stratégie de planification du système. La plupart des systèmes d'exploitation utilisent une stratégie de planification par défaut qui affecte les processus aux différents processeurs en fonction de leur priorité et de leur utilisation du processeur.
+
+Il est important de noter que lancer plusieurs instances de ce programme peut surcharger le système et affecter les performances de l'ensemble du système, il est donc déconseillé de le faire.
+
+(f/P espace en dessous non mais q après ce dernier pas Echap!)
+
+2ième remarque:
+1ère: utilisation du processus trop tongtemps pour des calculs inutiles=>%utilisation du processeur pour ce processus est très élévé. 
+->
+La consommation processeur baisse parce que l'affichage d'un message à l'écran nécessite de l'I/O, ce qui peut être plus lent que l'exécution de la boucle elle-même. Lorsque le processeur doit effectuer une opération d'I/O, il doit interrompre temporairement l'exécution de la boucle pour effectuer cette opération, ce qui réduit la consommation de processeur.
+
+De plus, l'affichage d'un message à l'écran peut entraîner un bégaiement de l'affichage et un ralentissement des performances visuelles, ce qui peut également réduire la consommation de processeur.
+
+En général, il est préférable d'éviter les attente actives infinies dans les programmes et de préférer une attente passive, telles que les pauses ou les sommeils, pour contrôler la fréquence d'exécution des processus.(voilà la conclusion)
+
+
+REDIRECTION VERS /dev/null:
+La redirection vers /dev/null corrige le problème parce que /dev/null est un fichier spécial en UNIX/Linux qui est considéré comme un "puits sans fond". Tout ce qui est écrit dans ce fichier est ignoré et perdu, ce qui signifie qu'il n'y a aucun coût en termes de performance pour écrire dans ce fichier.
+
+En redirigeant la sortie du programme vers /dev/null, vous éliminez le coût de l'affichage d'un message à l'écran, ce qui peut entraîner un ralentissement de la boucle et réduire la consommation de processeur. Cela peut également réduire les bégaiements de l'affichage et les problèmes de performance visuelle associés à l'affichage d'un message à l'écran.
+
+En résumé, la redirection vers /dev/null corrige le problème de surcharge de processeur car elle élimine le coût de l'affichage d'un message à l'écran et permet au processus de continuer à fonctionner sans interruption.
+
+Meilleur affichage dans top:
+filtres:
+=>o puis COM.(COMMAND=)=a.out ou %CPU>5.0 puis f espace sur P puis q (~Echap) puis 1.
+=>'=' réinitialise les filtres.
+
+Pour lancer une commande sur les processeurs 0 ou 2:
+	taskset -c 0,2 ./attente_active_infinie.
+	(numactl, hwloc-bind)
+2/déplacer le processus courant de pid 7456:
+	taskset -p -c 0,2 7456
+	>Rslt:
+		liste d'affinités actuelle du PID 91714 : 0-7
+	nouvelle liste d'affinités du PID 91714 : 0,2 (top de 91714 au lieu de Tgid: 7456)
+3/lister les processeurs par un masque héxadécimal:
+masque d'affinitée: les coeurs autorisés. 
+=>
+taskset -p 03 7456 signifie:
+avec -c 6,7 => ./a.out & se placera sur les processeurs 6 et 7 uniquement.
+Voilà.
+
+Applications:
+taskset -p -c 3,3 PID[./attente_active_infinie]=>prioriser le processus dernier sur le process 3 uniquement.
+Conclusion sur la gestion par conclusion du forçage présenté avant:
+
+Si vous lancez plusieurs instances d'un programme sur le même coeur de processeur en utilisant "taskset", le système d'exploitation exécutera ces processus sur ce coeur de processeur. Si plusieurs processus sont exécutés sur le même coeur de processeur en même temps, le système d'exploitation utilisera un système d'ordonnancement pour déterminer la façon dont les ressources du coeur sont partagées entre ces processus.
+
+Le système d'ordonnancement peut utiliser différents algorithmes pour répartir les ressources du processeur entre les processus en cours d'exécution. Par exemple, il peut utiliser un algorithme de rotation des tâches (ou "round-robin") pour exécuter successivement chacun des processus pendant une courte période de temps, ou il peut utiliser un algorithme priorisé pour exécuter les processus avec des priorités plus élevées plus souvent que les processus avec des priorités plus faibles.
+
+L'exécution de plusieurs processus sur le même coeur peut entraîner une réduction des performances, car le coeur doit partager ses ressources entre les différents processus. Cependant, en utilisant "taskset", vous pouvez contrôler sur quel coeur de processeur un processus s'exécute, ce qui peut aider à maximiser les performances dans certaines configurations.
+
+QST3.(2.c))
+Pour faire cela, on ouvre 2 terminaux avec cd OSI__TD_1 puis:
+On fait ces 2 instructions:
+Sur le premier terminal, on execute via ces 2 commandes:
+cd OSI__TD_1 puis:
+nice -20 ./attente_active_infinie & (plus grand=>prioritée faible)
+puis avec top, on récupère le pid nommé PID puis on fait:
+taskset -c -p 0 PID.
+On fait la même chose sur un autre terminal soit:
+cd OSI__TD_1
+puis:
+nice -10 ./attente_active_infinie & 'prioritée plus faible ici par rapport au précédent'
+puis dans le terminal du top récupérer le pid puis faire :
+taskset -p -c 0 <pid>
+puis avec top(aucun affichage après ; moyen mnémotechnique: & --présence):
+on visualise le résultat VOULU.
+Avec 1 dans le dernier terminal: on remarque une élévation de %%,%sys.///
+
+Comment la répartition du temps processeur varie-t-elle avec la priorité? 
+
+->
+>La répartition du temps processeur varie en fonction de la priorité accordée aux processus. Plus un processus a une priorité élevée, plus il a de chances d'obtenir l'accès au temps processeur et donc d'être exécuté. Les processus avec une priorité plus faible doivent attendre que les processus avec une priorité plus élevée soient exécutés avant d'avoir accès au temps processeur. Cependant, la manière dont la répartition du temps processeur est gérée dépend du système d'exploitation utilisé et de son algorithme de planification de processus.
+
+QST4.(1.d))
+(dernière question des 2 premières parties:
+1/Observation des processus et processeurs
+2/Répartition des processus et du temps processeur
+)
+Conclusion sur la répartition des tâches dormantes entre les différents coeurs:
+
+1/L'exécution d'un programme qui utilise l'appel système "sleep" pour une longue période ne garantit pas que le système répartit les tâches dormantes entre les différents processeurs. La répartition des tâches entre les processeurs dépend du système d'exploitation et de l'architecture matérielle du système informatique.
+
+2/Cependant, en général, lorsqu'un processus utilise l'appel système "sleep", il est mis en attente et ne consomme pas activement des ressources processeur. Le système d'exploitation peut donc planifier d'autres processus pour s'exécuter sur le ou les processeurs disponibles. Dans les systèmes multiprocesseurs, cela peut signifier que les tâches actives et en attente peuvent être réparties entre les différents processeurs pour optimiser l'utilisation des ressources processeur.
+
+3/En fin de compte, la manière dont le système d'exploitation planifie les tâches et répartit les ressources dépend de nombreux facteurs, tels que l'état de la file d'attente des processus, la priorité des processus et les limitations matérielles.
+Si on augmente, la répartition se fait d'une manière discrète.
+L'attente sleep ne consomme rien.
+C'est collé au process de départ.
+/au précédent. Voilà.
+
